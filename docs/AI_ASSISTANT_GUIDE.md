@@ -8,14 +8,19 @@ The Invoice Generator is a web application built with Next.js, TypeScript, and A
 
 ## Key Instructions
 
-1. **Development Mode by Default**
+1. **Message Format**
+   - Always start every message with the robot emoji: 🤖
+   - This helps identify AI assistant messages consistently
+   - No exceptions to this rule - all messages must begin with 🤖
+
+2. **Development Mode by Default**
    - Always work in development mode unless explicitly asked to deploy
    - Do not suggest or initiate deployment to Vercel unless specifically requested
    - Focus on local development and testing
    - Always use the `dev` branch for all development work
    - Never push to the `main` branch unless explicitly requested
 
-2. **Branch Management**
+3. **Branch Management**
    - All code changes should be committed to the `dev` branch
    - Only merge to `main` when explicitly requested with phrases like:
      - "Push to main"
@@ -23,36 +28,36 @@ The Invoice Generator is a web application built with Next.js, TypeScript, and A
      - "Deploy to production"
    - After merging to `main`, deployment to Vercel may be requested
 
-3. **Deployment Process**
+4. **Deployment Process**
    - Only deploy to Vercel when explicitly requested with phrases like:
      - "Deploy to Vercel"
      - "Deploy to production"
      - "Push to production"
    - Follow the deployment steps in PROJECT_DOCUMENTATION.md when requested
 
-4. **Mobile-First Approach**
+5. **Mobile-First Approach**
    - Prioritize mobile responsiveness in all UI components
    - Test layouts on small screens (320px width) first
    - Use responsive Tailwind classes (sm:, md:, lg:) appropriately
    - Ensure form fields are properly sized and spaced on mobile
 
-5. **Appwrite Integration**
+6. **Appwrite Integration**
    - Remember that `items` are stored as JSON strings in Appwrite
    - Always handle serialization/deserialization for complex data types
    - Implement proper error handling for all Appwrite API calls
    - Use the AppwriteContext for authentication state management
 
-6. **Performance Optimization**
+7. **Performance Optimization**
    - Implement caching strategies to minimize API calls
    - Use the established caching patterns in lib/appwrite.ts
    - Consider bundle size when adding new dependencies
 
-7. **Error Handling**
+8. **Error Handling**
    - Provide user-friendly error messages
    - Log detailed errors to console for debugging
    - Handle network errors gracefully, especially for mobile users
 
-8. **Code Organization**
+9. **Code Organization**
    - Keep Appwrite API functions in lib/appwrite.ts
    - Place reusable UI components in the components directory
    - Use the AppwriteContext for authentication state
@@ -83,19 +88,24 @@ The Invoice Generator is a web application built with Next.js, TypeScript, and A
 
 When responding to user queries:
 
-1. **For development tasks**:
+1. **For all responses**:
+   - Start every message with the robot emoji: 🤖
+   - Use clear, concise language
+   - Format code blocks with appropriate syntax highlighting
+
+2. **For development tasks**:
    - Explain the proposed changes
    - Implement the changes using appropriate tools
    - Commit changes to the `dev` branch
    - Provide clear explanations of what was changed and why
 
-2. **For deployment requests**:
+3. **For deployment requests**:
    - Confirm the deployment request
    - If requested, merge from `dev` to `main`
    - Follow the deployment steps in PROJECT_DOCUMENTATION.md
    - Verify the deployment was successful
 
-3. **For troubleshooting**:
+4. **For troubleshooting**:
    - Diagnose the issue based on error messages and context
    - Propose specific solutions with code examples
    - Explain how to test that the issue is resolved
