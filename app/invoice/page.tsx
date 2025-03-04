@@ -213,24 +213,26 @@ export default function InvoicePage() {
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">Invoice Details</h2>
                 
-                <div>
-                  <label className="block text-sm font-medium mb-1">Invoice Number</label>
-                  <input
-                    type="text"
-                    {...register("invoiceNumber", { required: true })}
-                    className="w-full p-2 border rounded-md"
-                  />
-                  {errors.invoiceNumber && <span className="text-red-500 text-sm">Required</span>}
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-1">Date</label>
-                  <input
-                    type="date"
-                    {...register("date", { required: true })}
-                    className="w-full p-2 border rounded-md"
-                  />
-                  {errors.date && <span className="text-red-500 text-sm">Required</span>}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Invoice Number</label>
+                    <input
+                      type="text"
+                      {...register("invoiceNumber", { required: true })}
+                      className="w-full p-2 border rounded-md"
+                    />
+                    {errors.invoiceNumber && <span className="text-red-500 text-sm">Required</span>}
+                  </div>
+                  
+                  <div className="col-span-1">
+                    <label className="block text-sm font-medium mb-1">Date</label>
+                    <input
+                      type="date"
+                      {...register("date", { required: true })}
+                      className="w-full p-2 border rounded-md"
+                    />
+                    {errors.date && <span className="text-red-500 text-sm">Required</span>}
+                  </div>
                 </div>
                 
                 <div>
@@ -284,7 +286,7 @@ export default function InvoicePage() {
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Client Information</h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-1">Client Name/Company</label>
                   <input
@@ -317,19 +319,28 @@ export default function InvoicePage() {
               </div>
             </div>
             
-            {/* Side ad banner and items section */}
+            {/* Items section and side ad banner */}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               <div className="lg:col-span-3">
+                {/* Items section */}
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-wrap justify-between items-center gap-2">
                     <h2 className="text-xl font-semibold">Items</h2>
                     <Button type="button" onClick={addItem} variant="outline">Add Item</Button>
                   </div>
                   
+                  {/* Mobile-friendly header for items */}
+                  <div className="hidden sm:grid sm:grid-cols-12 gap-4 text-sm font-medium text-gray-500 pb-2">
+                    <div className="sm:col-span-6">Description</div>
+                    <div className="sm:col-span-2">Quantity</div>
+                    <div className="sm:col-span-3">Price</div>
+                    <div className="sm:col-span-1"></div>
+                  </div>
+                  
                   {items.map((item, index) => (
                     <div key={index} className="grid grid-cols-12 gap-4 items-end border-b pb-4">
-                      <div className="col-span-6">
-                        <label className="block text-sm font-medium mb-1">Description</label>
+                      <div className="col-span-12 sm:col-span-6">
+                        <label className="block text-sm font-medium mb-1 sm:hidden">Description</label>
                         <input
                           type="text"
                           {...register(`items.${index}.description` as const, { required: true })}
@@ -337,8 +348,8 @@ export default function InvoicePage() {
                         />
                       </div>
                       
-                      <div className="col-span-2">
-                        <label className="block text-sm font-medium mb-1">Quantity</label>
+                      <div className="col-span-6 sm:col-span-2">
+                        <label className="block text-sm font-medium mb-1 sm:hidden">Quantity</label>
                         <input
                           type="number"
                           min="1"
@@ -351,8 +362,8 @@ export default function InvoicePage() {
                         />
                       </div>
                       
-                      <div className="col-span-3">
-                        <label className="block text-sm font-medium mb-1">Price</label>
+                      <div className="col-span-6 sm:col-span-3">
+                        <label className="block text-sm font-medium mb-1 sm:hidden">Price</label>
                         <input
                           type="number"
                           step="0.01"
@@ -366,7 +377,7 @@ export default function InvoicePage() {
                         />
                       </div>
                       
-                      <div className="col-span-1">
+                      <div className="col-span-12 sm:col-span-1 flex justify-end mt-2 sm:mt-0">
                         {index > 0 && (
                           <Button 
                             type="button" 
@@ -402,6 +413,7 @@ export default function InvoicePage() {
                 </div>
               </div>
               
+              {/* Side ad banner */}
               <div className="lg:col-span-1">
                 <AdBanner 
                   slot="9876543210" 
