@@ -142,15 +142,21 @@ export async function saveInvoice(invoiceData: any) {
       throw new Error('User not authenticated');
     }
     
+    // Format the invoice data to match Appwrite collection structure
+    // Convert items array to JSON string to avoid the 36 character limit on string attributes
+    const formattedInvoiceData = {
+      ...invoiceData,
+      // Stringify the items array to store it as a JSON string
+      items: JSON.stringify(invoiceData.items),
+      userId: user.$id,
+      createdAt: new Date().toISOString(),
+    };
+    
     const invoice = await databases.createDocument(
       DATABASES.INVOICES.ID,
       DATABASES.INVOICES.COLLECTIONS.INVOICES,
       ID.unique(),
-      {
-        ...invoiceData,
-        userId: user.$id,
-        createdAt: new Date().toISOString(),
-      }
+      formattedInvoiceData
     );
 
     // Invalidate invoice cache
@@ -193,13 +199,22 @@ export async function getUserInvoices(limit = 10, offset = 0, forceRefresh = fal
       ]
     );
     
+    // Parse the items JSON string back to an array for each invoice
+    const parsedInvoices = {
+      ...invoices,
+      documents: invoices.documents.map(invoice => ({
+        ...invoice,
+        items: typeof invoice.items === 'string' ? JSON.parse(invoice.items) : invoice.items
+      }))
+    };
+    
     // Update cache
     invoiceCache[cacheKey] = {
-      data: invoices,
+      data: parsedInvoices,
       timestamp: now
     };
     
-    return invoices;
+    return parsedInvoices;
   } catch (error: any) {
     console.error('Error fetching invoices:', error);
     throw new Error(error.message || 'Failed to fetch invoices');
@@ -235,13 +250,19 @@ export async function getInvoiceById(invoiceId: string, forceRefresh = false) {
       throw new Error('Access denied: Invoice does not belong to current user');
     }
     
+    // Parse the items JSON string back to an array
+    const parsedInvoice = {
+      ...invoice,
+      items: typeof invoice.items === 'string' ? JSON.parse(invoice.items) : invoice.items
+    };
+    
     // Update cache
     invoiceCache[cacheKey] = {
-      data: invoice,
+      data: parsedInvoice,
       timestamp: now
     };
     
-    return invoice;
+    return parsedInvoice;
   } catch (error: any) {
     console.error('Error fetching invoice:', error);
     throw new Error(error.message || 'Failed to fetch invoice');
