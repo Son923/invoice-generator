@@ -89,19 +89,35 @@ For production deployment, add your Vercel domain to the allowed domains in Appw
 
 ## Development Workflow
 
+### Branch Management
+
+1. **Development Branch (`dev`)**
+   - All development work should be done on the `dev` branch
+   - Commit and push changes to the `dev` branch regularly
+   - Never push directly to the `main` branch
+
+2. **Main Branch (`main`)**
+   - The `main` branch is reserved for production-ready code
+   - Only push to `main` when explicitly requested by the project owner
+   - Merging to `main` should be followed by a production deployment
+
 ### Local Development
 
 1. Clone the repository
-2. Install dependencies:
+2. Switch to the development branch:
+   ```bash
+   git checkout dev
+   ```
+3. Install dependencies:
    ```bash
    npm install
    ```
-3. Set up environment variables in `.env.local`
-4. Run the development server:
+4. Set up environment variables in `.env.local`
+5. Run the development server:
    ```bash
    npm run dev
    ```
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
+6. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ### Code Structure Best Practices
 
@@ -119,10 +135,10 @@ For production deployment, add your Vercel domain to the allowed domains in Appw
 
 ### Deploying to Vercel
 
-1. Commit and push changes to GitHub:
+1. Merge changes from `dev` to `main` (only when requested):
    ```bash
-   git add .
-   git commit -m "Your commit message"
+   git checkout main
+   git merge dev
    git push origin main
    ```
 

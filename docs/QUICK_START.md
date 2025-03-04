@@ -17,13 +17,21 @@ git clone https://github.com/Son923/invoice-generator.git
 cd invoice-generator
 ```
 
-### 2. Install Dependencies
+### 2. Switch to the Development Branch
+
+```bash
+git checkout dev
+```
+
+> **Important**: Always work on the `dev` branch. The `main` branch is reserved for production-ready code and should only be updated when explicitly requested by the project owner.
+
+### 3. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Set Up Environment Variables
+### 4. Set Up Environment Variables
 
 Create a `.env.local` file in the project root with the following variables:
 
@@ -40,7 +48,7 @@ NEXT_PUBLIC_APPWRITE_INVOICES_COLLECTION_ID=your_invoices_collection_id
 
 Replace the placeholder values with your actual Appwrite credentials.
 
-### 4. Start the Development Server
+### 5. Start the Development Server
 
 ```bash
 npm run dev
@@ -117,13 +125,24 @@ export async function myNewFunction(param: string) {
 3. Check for any console errors
 4. Verify that all features work as expected
 
+### Committing Your Changes
+
+Always commit your changes to the `dev` branch:
+
+```bash
+git add .
+git commit -m "Description of your changes"
+git push origin dev
+```
+
+> **Note**: Never push directly to the `main` branch. The `main` branch is reserved for production-ready code and should only be updated when explicitly requested.
+
 ## Project Documentation
 
 For more detailed information about the project, refer to:
 
 - `PROJECT_DOCUMENTATION.md` - Comprehensive project documentation
 - `AI_ASSISTANT_GUIDE.md` - Guide for AI assistants working on the project
-- `DEPLOYMENT_CHECKLIST.md` - Checklist for deploying to production
 
 ## Getting Help
 
@@ -135,11 +154,11 @@ If you encounter any issues or have questions:
 
 ## Development Workflow
 
-1. Create a new branch for your feature or fix
+1. Create a new branch from `dev` for your feature or fix (optional)
 2. Make your changes
 3. Test thoroughly
-4. Commit and push your changes
-5. Create a pull request
-6. Wait for review and approval
+4. Commit and push your changes to the `dev` branch
+5. Request a review if needed
+6. Merging to `main` and deployment will be handled by the project owner when ready
 
-Remember: Only deploy to production when explicitly requested to do so. 
+Remember: Only merge to `main` and deploy to production when explicitly requested to do so. 

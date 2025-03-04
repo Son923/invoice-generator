@@ -32,12 +32,28 @@ For detailed information about this project, please refer to the [documentation]
 ## Development
 
 ```bash
+# Clone the repository
+git clone https://github.com/Son923/invoice-generator.git
+cd invoice-generator
+
+# Switch to development branch
+git checkout dev
+
 # Install dependencies
 npm install
 
 # Start development server
 npm run dev
 ```
+
+## Branch Structure
+
+This project follows a structured branching strategy:
+
+- **`dev`** - Development branch where all active development occurs
+- **`main`** - Production branch that is deployed to Vercel
+
+> **Important**: Always work on the `dev` branch. The `main` branch is reserved for production-ready code and should only be updated when explicitly requested by the project owner.
 
 ## License
 
