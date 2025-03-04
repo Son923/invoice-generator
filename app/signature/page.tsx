@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { saveAs } from 'file-saver'
 import { useAppwrite } from '@/contexts/AppwriteContext'
+import { AdBanner } from '@/components/ad-banner'
 
 export default function SignaturePage() {
   const router = useRouter()
@@ -144,6 +145,13 @@ export default function SignaturePage() {
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       <h1 className="text-2xl font-bold mb-6 text-center">Signature Creator</h1>
       
+      {/* Top ad placement */}
+      <AdBanner
+        slot="1234567890"
+        format="horizontal"
+        className="mb-6"
+      />
+
       <div className="bg-white rounded-lg shadow-md p-4 mb-6">
         <div className="border-2 border-gray-300 rounded-md mb-4 bg-gray-50">
           <canvas
@@ -181,6 +189,13 @@ export default function SignaturePage() {
           </p>
         )}
       </div>
+
+      {/* Middle ad placement */}
+      <AdBanner
+        slot="0987654321"
+        format="rectangle"
+        className="mb-6"
+      />
       
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-lg font-semibold mb-3">Instructions</h2>
@@ -191,6 +206,13 @@ export default function SignaturePage() {
           <li>Your signature can be used in the invoice generator or other documents</li>
         </ul>
       </div>
+
+      {/* Bottom ad placement */}
+      <AdBanner
+        slot="5432109876"
+        format="horizontal"
+        className="mt-6"
+      />
     </div>
   )
 } 
