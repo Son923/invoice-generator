@@ -56,7 +56,7 @@ export default function InvoicePage() {
     setItems(newItems)
   }
 
-  const generatePDF = (data: InvoiceFormData) => {
+  const generatePDF = (data: InvoiceFormData, shouldDownload = true) => {
     const doc = new jsPDF()
     
     // Add company logo/header
@@ -128,10 +128,19 @@ export default function InvoicePage() {
       doc.text(data.notes.split('\n'), 20, y)
     }
     
-    // Save the PDF
-    doc.save(`invoice-${data.invoiceNumber}.pdf`)
+    if (shouldDownload) {
+      // Save the PDF
+      doc.save(`invoice-${data.invoiceNumber}.pdf`)
+    } else {
+      // Open in new window
+      window.open(doc.output('bloburl'), '_blank')
+    }
     
     return total
+  }
+
+  const previewInvoice = (data: InvoiceFormData) => {
+    generatePDF(data, false)
   }
 
   const onSubmit = async (data: InvoiceFormData) => {
@@ -376,10 +385,19 @@ export default function InvoicePage() {
                   ></textarea>
                 </div>
                 
-                <div className="mt-8">
+                <div className="mt-8 flex gap-4">
+                  <Button 
+                    type="button" 
+                    className="flex-1"
+                    variant="outline"
+                    onClick={handleSubmit(previewInvoice)}
+                    disabled={saving}
+                  >
+                    Preview
+                  </Button>
                   <Button 
                     type="submit" 
-                    className="w-full"
+                    className="flex-1"
                     disabled={saving}
                   >
                     {saving ? "Generating..." : "Generate Invoice PDF"}
