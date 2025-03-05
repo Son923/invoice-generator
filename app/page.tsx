@@ -1,82 +1,60 @@
-import FloatingBubblesBackground from '@/components/floating-bubbles'
-import { AdBanner } from '@/components/ad-banner'
-import Link from 'next/link'
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import FloatingBubblesBackground from "@/components/floating-bubbles"
+import { AdBanner } from "@/components/ad-banner"
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="relative min-h-screen">
-      <FloatingBubblesBackground />
-      
-      <div className="container mx-auto px-4 py-16 relative z-10">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
-            Document Tools Hub
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900">
+      {/* Top ad banner */}
+      <div className="w-full max-w-5xl mx-auto pt-4 px-4">
+        <AdBanner 
+          slot="1234567890" 
+          format="horizontal" 
+          backgroundColor="bg-blue-100/50 dark:bg-blue-800/50" 
+          borderColor="border-blue-300 dark:border-blue-700"
+        />
+      </div>
+
+      <FloatingBubblesBackground title="Free Invoice Generator">
+        <div className="text-center space-y-6">
+          <h1 className="text-4xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+            Free Invoice Generator
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Create professional documents with our suite of free online tools
+          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
+            Create professional invoices in seconds. No sign-up required.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link href="/invoice">
+              <Button
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+              >
+                Create Invoice
+              </Button>
+            </Link>
+            <Link href="/signature">
+              <Button
+                size="lg"
+                variant="outline"
+                className="px-8 py-6 text-lg font-semibold rounded-xl border-2 border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+              >
+                Create Signature
+              </Button>
+            </Link>
+          </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* Invoice Generator Card */}
-          <Link href="/invoice" className="group">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-105 border border-gray-200 dark:border-gray-700">
-              <div className="mb-4 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                Invoice Generator
-              </h2>
-              <p className="text-gray-600 dark:text-gray-300 text-center">
-                Create, customize, and download professional invoices in seconds
-              </p>
-              <div className="mt-6 text-center">
-                <span className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full font-medium">
-                  Get Started →
-                </span>
-              </div>
-            </div>
-          </Link>
-          
-          {/* Signature Creator Card */}
-          <Link href="/signature" className="group">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-105 border border-gray-200 dark:border-gray-700">
-              <div className="mb-4 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
-                Signature Creator
-              </h2>
-              <p className="text-gray-600 dark:text-gray-300 text-center">
-                Draw and download your digital signature for documents
-              </p>
-              <div className="mt-6 text-center">
-                <span className="inline-block px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full font-medium">
-                  Create Signature →
-                </span>
-              </div>
-            </div>
-          </Link>
-        </div>
+      </FloatingBubblesBackground>
+
+      {/* Bottom ad banner */}
+      <div className="w-full max-w-5xl mx-auto pb-4 px-4">
+        <AdBanner 
+          slot="5432109876" 
+          format="rectangle" 
+          backgroundColor="bg-purple-100/50 dark:bg-purple-800/50" 
+          borderColor="border-purple-300 dark:border-purple-700"
+        />
       </div>
-      
-      {/* Fixed position ad banner at the bottom */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-2 bg-white/30 dark:bg-black/30 backdrop-blur-md">
-        <div className="container mx-auto max-w-5xl">
-          <AdBanner 
-            slot="9876543210" 
-            format="horizontal" 
-            height="60px"
-            backgroundColor="bg-white/70 dark:bg-gray-800/70" 
-            borderColor="border-gray-300 dark:border-gray-600"
-            className="my-0"
-          />
-        </div>
-      </div>
-    </main>
+    </div>
   )
 } 

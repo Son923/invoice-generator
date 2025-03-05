@@ -1,7 +1,6 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { getCurrentUser, isAuthenticated, logout } from '@/lib/appwrite';
 
 // Define the context type
 type AppwriteContextType = {
@@ -16,8 +15,8 @@ type AppwriteContextType = {
 // Create the context with default values
 const AppwriteContext = createContext<AppwriteContextType>({
   user: null,
-  loading: true,
-  authenticated: false,
+  loading: false,
+  authenticated: true,
   refreshUser: async () => {},
   logoutUser: async () => {},
   lastUpdated: 0,
@@ -28,59 +27,27 @@ const CACHE_DURATION = 5 * 60 * 1000;
 
 export const AppwriteProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [authenticated, setAuthenticated] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(0);
 
-  // Function to refresh user data
+  // Function to refresh user data - no longer needed but kept for interface compatibility
   const refreshUser = useCallback(async (force = false) => {
-    // Skip refresh if cache is still valid and not forced
-    const now = Date.now();
-    if (!force && user && now - lastUpdated < CACHE_DURATION) {
-      return;
-    }
+    // No-op since we don't need authentication anymore
+  }, []);
 
-    try {
-      setLoading(true);
-      const auth = await isAuthenticated();
-      setAuthenticated(auth);
-      
-      if (auth) {
-        const currentUser = await getCurrentUser();
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
-      
-      setLastUpdated(now);
-    } catch (error) {
-      console.error('Error refreshing user:', error);
-      setUser(null);
-      setAuthenticated(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [user, lastUpdated]);
-
-  // Function to handle logout
+  // Function to handle logout - no longer needed but kept for interface compatibility
   const logoutUser = useCallback(async () => {
-    try {
-      await logout();
-      setUser(null);
-      setAuthenticated(false);
-      setLastUpdated(Date.now());
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
+    // No-op since we don't need authentication anymore
   }, []);
 
   // Initial load
   useEffect(() => {
-    refreshUser();
+    // No need to refresh user data as we don't need authentication anymore
     
     // Set up event listener for focus to refresh user data when tab becomes active
     const handleFocus = () => {
-      refreshUser();
+      // No need to refresh user data as we don't need authentication anymore
     };
     
     window.addEventListener('focus', handleFocus);
@@ -88,13 +55,13 @@ export const AppwriteProvider = ({ children }: { children: React.ReactNode }) =>
     return () => {
       window.removeEventListener('focus', handleFocus);
     };
-  }, [refreshUser]);
+  }, []);
 
   const contextValue = {
-    user,
-    loading,
-    authenticated,
-    refreshUser: () => refreshUser(true), // Force refresh when called explicitly
+    user: null,
+    loading: false,
+    authenticated: true,
+    refreshUser,
     logoutUser,
     lastUpdated,
   };
@@ -106,5 +73,5 @@ export const AppwriteProvider = ({ children }: { children: React.ReactNode }) =>
   );
 };
 
-// Custom hook to use the Appwrite context
+// Export the hook
 export const useAppwrite = () => useContext(AppwriteContext); 
