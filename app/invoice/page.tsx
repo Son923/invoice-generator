@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { AdBanner } from "@/components/ad-banner"
 import { saveInvoice } from "@/lib/appwrite"
 import { useAppwrite } from "@/contexts/AppwriteContext"
-import { generatePDF } from "@/lib/pdf"
 
 // Invoice form interface
 interface InvoiceFormData {
@@ -31,17 +30,10 @@ interface InvoiceFormData {
 
 export default function InvoicePage() {
   const router = useRouter()
-  const { user, authenticated, loading } = useAppwrite()
+  const { user } = useAppwrite()
   const [items, setItems] = useState([{ description: "", quantity: 1, price: 0 }])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  
-  // Check authentication on page load
-  useEffect(() => {
-    if (!loading && !authenticated) {
-      router.push("/auth")
-    }
-  }, [authenticated, loading, router])
   
   const { register, handleSubmit, formState: { errors } } = useForm<InvoiceFormData>({
     defaultValues: {
@@ -54,15 +46,6 @@ export default function InvoicePage() {
     }
   })
 
-  // Update form values when user data becomes available
-  useEffect(() => {
-    if (user) {
-      // Reset form with user data
-      // Note: This is a simplified approach - for a complete solution, 
-      // you would use the reset method from useForm
-    }
-  }, [user])
-
   const addItem = () => {
     setItems([...items, { description: "", quantity: 1, price: 0 }])
   }
@@ -73,30 +56,110 @@ export default function InvoicePage() {
     setItems(newItems)
   }
 
+  const generatePDF = (data: InvoiceFormData) => {
+    const doc = new jsPDF()
+    
+    // Add company logo/header
+    doc.setFontSize(20)
+    doc.text("INVOICE", 105, 20, { align: "center" })
+    
+    // Add invoice details
+    doc.setFontSize(10)
+    doc.text(`Invoice Number: ${data.invoiceNumber}`, 20, 40)
+    doc.text(`Date: ${data.date}`, 20, 45)
+    doc.text(`Due Date: ${data.dueDate}`, 20, 50)
+    
+    // Add from details
+    doc.setFontSize(12)
+    doc.text("From:", 20, 65)
+    doc.setFontSize(10)
+    doc.text(data.fromName, 20, 70)
+    doc.text(data.fromEmail, 20, 75)
+    doc.text(data.fromAddress.split('\n'), 20, 80)
+    
+    // Add to details
+    doc.setFontSize(12)
+    doc.text("To:", 120, 65)
+    doc.setFontSize(10)
+    doc.text(data.toName, 120, 70)
+    doc.text(data.toEmail, 120, 75)
+    doc.text(data.toAddress.split('\n'), 120, 80)
+    
+    // Add items table
+    doc.setFontSize(12)
+    doc.text("Items", 20, 110)
+    
+    // Table headers
+    doc.setFontSize(10)
+    doc.text("Description", 20, 120)
+    doc.text("Quantity", 120, 120)
+    doc.text("Price", 150, 120)
+    doc.text("Total", 180, 120)
+    
+    // Table content
+    let y = 130
+    let total = 0
+    
+    data.items.forEach((item, index) => {
+      const itemTotal = item.quantity * item.price
+      total += itemTotal
+      
+      doc.text(item.description, 20, y)
+      doc.text(item.quantity.toString(), 120, y)
+      doc.text(`$${item.price.toFixed(2)}`, 150, y)
+      doc.text(`$${itemTotal.toFixed(2)}`, 180, y)
+      
+      y += 10
+    })
+    
+    // Add total
+    doc.line(20, y, 190, y)
+    y += 10
+    doc.setFontSize(12)
+    doc.text(`Total: $${total.toFixed(2)}`, 150, y)
+    
+    // Add notes
+    if (data.notes) {
+      y += 20
+      doc.setFontSize(12)
+      doc.text("Notes:", 20, y)
+      y += 10
+      doc.setFontSize(10)
+      doc.text(data.notes.split('\n'), 20, y)
+    }
+    
+    // Save the PDF
+    doc.save(`invoice-${data.invoiceNumber}.pdf`)
+    
+    return total
+  }
+
   const onSubmit = async (data: InvoiceFormData) => {
     setError(null)
     setSaving(true)
     
     try {
       // Generate PDF
-      generatePDF(data)
-      console.log("Invoice generated successfully")
+      const total = generatePDF(data)
+      
+      // Save to Appwrite
+      await saveInvoice({
+        ...data,
+        total,
+        status: 'generated',
+        items: data.items.map(item => ({
+          ...item,
+          total: item.quantity * item.price
+        }))
+      })
+      
+      console.log("Invoice saved successfully")
     } catch (err: any) {
-      console.error("Error generating invoice:", err)
-      setError(err.message || "Failed to generate invoice")
+      console.error("Error saving invoice:", err)
+      setError(err.message || "Failed to save invoice")
     } finally {
       setSaving(false)
     }
-  }
-
-  // Show loading state while checking authentication
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
-  }
-
-  // If not authenticated, this will redirect (see useEffect)
-  if (!authenticated || !user) {
-    return <div className="min-h-screen flex items-center justify-center">Redirecting to login...</div>
   }
 
   return (

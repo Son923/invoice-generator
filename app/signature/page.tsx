@@ -1,11 +1,15 @@
 "use client"
 
 import { useRef, useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { saveAs } from 'file-saver'
+import { useAppwrite } from '@/contexts/AppwriteContext'
 import { AdBanner } from '@/components/ad-banner'
 
 export default function SignaturePage() {
+  const router = useRouter()
+  const { loading } = useAppwrite()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null)
@@ -107,6 +111,17 @@ export default function SignaturePage() {
     }
   }
 
+  // Render loading state
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-3xl">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="animate-pulse text-gray-500">Loading...</div>
+        </div>
+      </div>
+    )
+  }
+
   // Main content
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
@@ -157,13 +172,6 @@ export default function SignaturePage() {
         )}
       </div>
 
-      {/* Middle ad placement */}
-      <AdBanner
-        slot="0987654321"
-        format="rectangle"
-        className="mb-6"
-      />
-      
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-lg font-semibold mb-3">Instructions</h2>
         <ul className="list-disc pl-5 space-y-2 text-gray-700">
@@ -173,6 +181,13 @@ export default function SignaturePage() {
           <li>Your signature can be used in the invoice generator or other documents</li>
         </ul>
       </div>
+
+      {/* Middle ad placement */}
+      <AdBanner
+        slot="0987654321"
+        format="rectangle"
+        className="mb-6"
+      />
 
       {/* Bottom ad placement */}
       <AdBanner

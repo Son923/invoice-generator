@@ -2,10 +2,12 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { useAppwrite } from "@/contexts/AppwriteContext"
 
 export function Navbar() {
+  const router = useRouter()
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -16,32 +18,32 @@ export function Navbar() {
 
   return (
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between h-16">
+          {/* Logo and primary navigation */}
           <div className="flex">
-            <Link href="/" className="flex items-center">
-              <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="flex-shrink-0 flex items-center">
+              <Link href="/" className="text-xl font-bold text-blue-600">
                 Invoice Generator
-              </span>
-            </Link>
-            
-            <div className="hidden md:ml-6 md:flex md:space-x-4">
+              </Link>
+            </div>
+            <div className="hidden sm:ml-6 sm:flex sm:space-x-4 items-center">
               <Link 
                 href="/invoice"
-                className={`inline-flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
                   isActive('/invoice')
                     ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
+                    : 'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
                 }`}
               >
                 Create Invoice
               </Link>
               <Link 
                 href="/signature"
-                className={`inline-flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
                   isActive('/signature')
                     ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
+                    : 'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
                 }`}
               >
                 Signature
@@ -49,17 +51,42 @@ export function Navbar() {
             </div>
           </div>
 
-          <div className="md:hidden">
+          {/* Mobile menu button */}
+          <div className="sm:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
+              <span className="sr-only">Open main menu</span>
+              {/* Menu icon */}
+              <svg
+                className={`${isMenuOpen ? 'hidden' : 'block'} h-6 w-6`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+              {/* Close icon */}
+              <svg
+                className={`${isMenuOpen ? 'block' : 'hidden'} h-6 w-6`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -67,26 +94,24 @@ export function Navbar() {
       </div>
 
       {/* Mobile menu */}
-      <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
+      <div className={`${isMenuOpen ? 'block' : 'hidden'} sm:hidden`}>
         <div className="px-2 pt-2 pb-3 space-y-1">
-          <Link 
+          <Link
             href="/invoice"
-            onClick={() => setIsMenuOpen(false)}
             className={`block px-3 py-2 rounded-md text-base font-medium ${
               isActive('/invoice')
                 ? 'text-blue-600 dark:text-blue-400'
-                : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
+                : 'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
             }`}
           >
             Create Invoice
           </Link>
-          <Link 
+          <Link
             href="/signature"
-            onClick={() => setIsMenuOpen(false)}
             className={`block px-3 py-2 rounded-md text-base font-medium ${
               isActive('/signature')
                 ? 'text-blue-600 dark:text-blue-400'
-                : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100'
+                : 'text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400'
             }`}
           >
             Signature

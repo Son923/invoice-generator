@@ -1,6 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+// import { getCurrentUser, isAuthenticated, logout } from '@/lib/appwrite';
 
 // Define the context type
 type AppwriteContextType = {
@@ -15,8 +16,8 @@ type AppwriteContextType = {
 // Create the context with default values
 const AppwriteContext = createContext<AppwriteContextType>({
   user: null,
-  loading: false,
-  authenticated: true,
+  loading: true,
+  authenticated: false,
   refreshUser: async () => {},
   logoutUser: async () => {},
   lastUpdated: 0,
@@ -26,41 +27,25 @@ const AppwriteContext = createContext<AppwriteContextType>({
 const CACHE_DURATION = 5 * 60 * 1000;
 
 export const AppwriteProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [authenticated, setAuthenticated] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState(0);
+  const [user] = useState<any>({ name: 'Guest User', email: 'guest@example.com' }); // Default guest user
+  const [loading, setLoading] = useState(false); // Set to false by default
+  const [authenticated] = useState(true); // Always authenticated
+  const [lastUpdated, setLastUpdated] = useState(Date.now());
 
-  // Function to refresh user data - no longer needed but kept for interface compatibility
-  const refreshUser = useCallback(async (force = false) => {
-    // No-op since we don't need authentication anymore
+  // Simplified refresh user function
+  const refreshUser = useCallback(async () => {
+    setLastUpdated(Date.now());
   }, []);
 
-  // Function to handle logout - no longer needed but kept for interface compatibility
+  // Simplified logout function
   const logoutUser = useCallback(async () => {
-    // No-op since we don't need authentication anymore
-  }, []);
-
-  // Initial load
-  useEffect(() => {
-    // No need to refresh user data as we don't need authentication anymore
-    
-    // Set up event listener for focus to refresh user data when tab becomes active
-    const handleFocus = () => {
-      // No need to refresh user data as we don't need authentication anymore
-    };
-    
-    window.addEventListener('focus', handleFocus);
-    
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-    };
+    setLastUpdated(Date.now());
   }, []);
 
   const contextValue = {
-    user: null,
-    loading: false,
-    authenticated: true,
+    user,
+    loading,
+    authenticated,
     refreshUser,
     logoutUser,
     lastUpdated,
@@ -73,5 +58,5 @@ export const AppwriteProvider = ({ children }: { children: React.ReactNode }) =>
   );
 };
 
-// Export the hook
+// Custom hook to use the Appwrite context
 export const useAppwrite = () => useContext(AppwriteContext); 
