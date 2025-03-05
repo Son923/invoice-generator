@@ -30,17 +30,10 @@ interface InvoiceFormData {
 
 export default function InvoicePage() {
   const router = useRouter()
-  const { user, authenticated, loading } = useAppwrite()
+  const { user } = useAppwrite()
   const [items, setItems] = useState([{ description: "", quantity: 1, price: 0 }])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  
-  // Check authentication on page load
-  useEffect(() => {
-    if (!loading && !authenticated) {
-      router.push("/auth")
-    }
-  }, [authenticated, loading, router])
   
   const { register, handleSubmit, formState: { errors } } = useForm<InvoiceFormData>({
     defaultValues: {
@@ -52,15 +45,6 @@ export default function InvoicePage() {
       items: items
     }
   })
-
-  // Update form values when user data becomes available
-  useEffect(() => {
-    if (user) {
-      // Reset form with user data
-      // Note: This is a simplified approach - for a complete solution, 
-      // you would use the reset method from useForm
-    }
-  }, [user])
 
   const addItem = () => {
     setItems([...items, { description: "", quantity: 1, price: 0 }])
@@ -176,16 +160,6 @@ export default function InvoicePage() {
     } finally {
       setSaving(false)
     }
-  }
-
-  // Show loading state while checking authentication
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
-  }
-
-  // If not authenticated, this will redirect (see useEffect)
-  if (!authenticated || !user) {
-    return <div className="min-h-screen flex items-center justify-center">Redirecting to login...</div>
   }
 
   return (
