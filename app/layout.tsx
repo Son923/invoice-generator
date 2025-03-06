@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import '@indieboosting/react/indieboosting.css'
 import { Navbar } from '@/components/navbar'
 import { AppwriteProvider } from '@/contexts/AppwriteContext'
 
@@ -45,4 +46,4 @@ export default function RootLayout({
       </body>
     </html>
   )
-} 
+}

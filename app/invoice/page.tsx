@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { AdBanner } from "@/components/ad-banner"
 import { saveInvoice } from "@/lib/appwrite"
 import { useAppwrite } from "@/contexts/AppwriteContext"
+import { IndieBoostingWrapper as IndieBoosting } from "@/components/indie-boosting-wrapper"
 
 // Invoice form interface
 interface InvoiceFormData {
@@ -175,14 +176,6 @@ export default function InvoicePage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto py-8 px-4">
         <h1 className="text-3xl font-bold mb-8 text-center">Create Your Invoice</h1>
-        
-        {/* Top ad banner */}
-        <AdBanner 
-          slot="1234567890" 
-          format="horizontal" 
-          backgroundColor="bg-blue-100 dark:bg-blue-900" 
-          borderColor="border-blue-300 dark:border-blue-700"
-        />
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -407,26 +400,15 @@ export default function InvoicePage() {
               
               {/* Side ad banner */}
               <div className="lg:col-span-1">
-                <AdBanner 
-                  slot="9876543210" 
-                  format="vertical" 
-                  backgroundColor="bg-purple-100 dark:bg-purple-900" 
-                  borderColor="border-purple-300 dark:border-purple-700"
-                  className="sticky top-4"
-                />
+                <IndieBoosting id="40SXDKOTS3" direction="vertical" maxProducts={3}/>
               </div>
             </div>
           </form>
         </div>
         
         {/* Bottom ad banner */}
-        <AdBanner 
-          slot="5432109876" 
-          format="rectangle" 
-          backgroundColor="bg-green-100 dark:bg-green-900" 
-          borderColor="border-green-300 dark:border-green-700"
-        />
+        <IndieBoosting id="40SXDKOTS3" title="Check out these apps" maxColumns={3} />
       </div>
     </div>
   )
-} 
+}

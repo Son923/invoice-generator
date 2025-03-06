@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { saveAs } from 'file-saver'
 import { useAppwrite } from '@/contexts/AppwriteContext'
 import { AdBanner } from '@/components/ad-banner'
+import { IndieBoostingWrapper as IndieBoosting } from '@/components/indie-boosting-wrapper'
 
 export default function SignaturePage() {
   const router = useRouter()
@@ -170,17 +171,21 @@ export default function SignaturePage() {
 
   // Main content
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <h1 className="text-2xl font-bold mb-6 text-center">Signature Creator</h1>
-      
-      {/* Top ad placement */}
-      <AdBanner
-        slot="1234567890"
-        format="horizontal"
-        className="mb-6"
-      />
+    <div className="flex justify-center px-4 py-8">
+      {/* Left sidebar - IndieBoosting vertical ad */}
+      <div className="hidden md:block w-64 mr-6">
+        <IndieBoosting 
+            id="40SXDKOTS3" 
+            direction="vertical" 
+            maxProducts={7}
+            noTitle
+          />
+      </div>
 
-      <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+      <div className="max-w-3xl">
+        <h1 className="text-2xl font-bold mb-6 text-center">Signature Creator</h1>
+
+        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
         <div className="border-2 border-gray-300 rounded-md mb-4 bg-gray-50">
           <canvas
             ref={canvasRef}
@@ -234,20 +239,18 @@ export default function SignaturePage() {
           <li>Your signature can be used in the invoice generator or other documents</li>
         </ul>
       </div>
+      
+      </div>
 
-      {/* Middle ad placement */}
-      <AdBanner
-        slot="0987654321"
-        format="rectangle"
-        className="mb-6"
-      />
-
-      {/* Bottom ad placement */}
-      <AdBanner
-        slot="5432109876"
-        format="horizontal"
-        className="mt-6"
-      />
+      {/* Right sidebar - IndieBoosting vertical ad */}
+      <div className="hidden md:block w-64 ml-6">
+        <IndieBoosting 
+          id="40SXDKOTS3" 
+          direction="vertical" 
+          maxProducts={7}
+          noTitle
+        />
+      </div>
     </div>
   )
 }

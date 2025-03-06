@@ -1,22 +1,34 @@
 import FloatingBubblesBackground from '@/components/floating-bubbles'
 import Link from 'next/link'
+import { IndieBoostingWrapper as IndieBoosting } from '@/components/indie-boosting-wrapper'
 
 export default function Home() {
   return (
     <main className="relative min-h-screen">
       <FloatingBubblesBackground />
       
-      <div className="container mx-auto px-4 py-16 relative z-10">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
-            Document Tools Hub
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Create professional documents with our suite of free online tools
-          </p>
+      <div className="flex justify-center px-4 py-16 relative z-10">
+        {/* Left sidebar - IndieBoosting vertical ad */}
+        <div className="hidden md:block w-64 mr-6">
+          <IndieBoosting 
+            id="40SXDKOTS3" 
+            direction="vertical" 
+            maxProducts={5}
+            noTitle
+          />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="max-w-4xl">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
+              Document Tools Hub
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Create professional documents with our suite of free online tools
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto">
           {/* Invoice Generator Card */}
           <Link href="/invoice" className="group">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:scale-105 border border-gray-200 dark:border-gray-700">
@@ -60,8 +72,19 @@ export default function Home() {
               </div>
             </div>
           </Link>
+          </div>
+        </div>
+        
+        {/* Right sidebar - IndieBoosting vertical ad */}
+        <div className="hidden md:block w-64 ml-6">
+          <IndieBoosting 
+            id="40SXDKOTS3" 
+            direction="vertical" 
+            maxProducts={5}
+            noTitle
+          />
         </div>
       </div>
     </main>
   )
-} 
+}
