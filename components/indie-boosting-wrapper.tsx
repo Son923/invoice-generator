@@ -8,6 +8,8 @@ type IndieboostingProps = {
   maxProducts?: number
   noTitle?: boolean
   className?: string
+  title?: string
+  maxColumns?: number
 }
 
 export function IndieBoostingWrapper(props: IndieboostingProps) {
