@@ -4,6 +4,7 @@ import './globals.css'
 import '@indieboosting/react/indieboosting.css'
 import { Navbar } from '@/components/navbar'
 import { AppwriteProvider } from '@/contexts/AppwriteContext'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -42,6 +43,7 @@ export default function RootLayout({
         <AppwriteProvider>
           <Navbar />
           {children}
+          <SpeedInsights />
         </AppwriteProvider>
       </body>
     </html>
