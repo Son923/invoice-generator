@@ -4,7 +4,7 @@ This guide provides instructions for AI assistants working on the Invoice Genera
 
 ## Project Context
 
-The Invoice Generator is a web application built with Next.js, TypeScript, and Appwrite. It allows users to create, save, and manage professional invoices with PDF generation capabilities.
+The Invoice Generator is a web application built with Next.js, TypeScript, and Appwrite. It allows users to create, save, and manage professional invoices with PDF generation capabilities. The platform will provide additional tools like signature creator and other productivity features to enhance the invoice generation process.
 
 ## Key Instructions
 
@@ -151,4 +151,4 @@ When responding to user queries:
    - `NEXT_PUBLIC_APPWRITE_INVOICES_COLLECTION_ID`: Invoices collection ID
    - `NEXT_PUBLIC_ADSENSE_ID`: Google AdSense ID (for production)
 
-Remember to refer to PROJECT_DOCUMENTATION.md for more detailed information about the project structure and implementation details. 
+Remember to refer to PROJECT_DOCUMENTATION.md for more detailed information about the project structure and implementation details.

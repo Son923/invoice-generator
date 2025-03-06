@@ -111,6 +111,52 @@ export default function SignaturePage() {
     }
   }
 
+  // Preview the signature
+  const previewSignature = () => {
+    if (canvasRef.current) {
+      // Open the signature in a new window/tab
+      const dataUrl = canvasRef.current.toDataURL('image/png');
+      const newWindow = window.open();
+      if (newWindow) {
+        newWindow.document.write(`
+          <html>
+            <head>
+              <title>Signature Preview</title>
+              <style>
+                body { 
+                  display: flex; 
+                  justify-content: center; 
+                  align-items: center; 
+                  min-height: 100vh; 
+                  margin: 0; 
+                  background-color: #f5f5f5; 
+                  flex-direction: column;
+                }
+                img { 
+                  max-width: 100%; 
+                  border: 1px solid #ccc; 
+                  box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+                  background-color: white;
+                  padding: 20px;
+                }
+                h2 {
+                  font-family: system-ui, -apple-system, sans-serif;
+                  color: #333;
+                  margin-bottom: 20px;
+                }
+              </style>
+            </head>
+            <body>
+              <h2>Signature Preview</h2>
+              <img src="${dataUrl}" alt="Signature Preview" />
+            </body>
+          </html>
+        `);
+        newWindow.document.close();
+      }
+    }
+  };
+
   // Render loading state
   if (loading) {
     return (
@@ -158,6 +204,13 @@ export default function SignaturePage() {
             Clear
           </Button>
           <Button 
+            variant="secondary"
+            onClick={previewSignature}
+            className="flex-1 sm:flex-none"
+          >
+            Preview
+          </Button>
+          <Button 
             onClick={saveSignature}
             className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700"
           >
@@ -197,4 +250,4 @@ export default function SignaturePage() {
       />
     </div>
   )
-} 
+}
