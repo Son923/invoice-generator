@@ -145,7 +145,7 @@ export default function InvoicePage() {
         // For preview, return the blob URL
         const blobUrl = doc.output('bloburl')
         if (!shouldDownload) {
-          setPreviewUrl(blobUrl)
+          setPreviewUrl(blobUrl.toString())
         }
       }
       
