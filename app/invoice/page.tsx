@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { jsPDF } from "jspdf"
 import { Button } from "@/components/ui/button"
 import { AdBanner } from "@/components/ad-banner"
@@ -35,8 +35,10 @@ export default function InvoicePage() {
   const [items, setItems] = useState([{ description: "", quantity: 1, price: 0 }])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const previewContainerRef = useRef<HTMLDivElement>(null)
   
-  const { register, handleSubmit, formState: { errors } } = useForm<InvoiceFormData>({
+  const { register, handleSubmit, control, formState: { errors } } = useForm<InvoiceFormData>({
     defaultValues: {
       invoiceNumber: `INV-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
       date: new Date().toISOString().split('T')[0],
@@ -58,91 +60,130 @@ export default function InvoicePage() {
   }
 
   const generatePDF = (data: InvoiceFormData, shouldDownload = true) => {
-    const doc = new jsPDF()
+    if (!data) return 0
     
-    // Add company logo/header
-    doc.setFontSize(20)
-    doc.text("INVOICE", 105, 20, { align: "center" })
-    
-    // Add invoice details
-    doc.setFontSize(10)
-    doc.text(`Invoice Number: ${data.invoiceNumber}`, 20, 40)
-    doc.text(`Date: ${data.date}`, 20, 45)
-    doc.text(`Due Date: ${data.dueDate}`, 20, 50)
-    
-    // Add from details
-    doc.setFontSize(12)
-    doc.text("From:", 20, 65)
-    doc.setFontSize(10)
-    doc.text(data.fromName, 20, 70)
-    doc.text(data.fromEmail, 20, 75)
-    doc.text(data.fromAddress.split('\n'), 20, 80)
-    
-    // Add to details
-    doc.setFontSize(12)
-    doc.text("To:", 120, 65)
-    doc.setFontSize(10)
-    doc.text(data.toName, 120, 70)
-    doc.text(data.toEmail, 120, 75)
-    doc.text(data.toAddress.split('\n'), 120, 80)
-    
-    // Add items table
-    doc.setFontSize(12)
-    doc.text("Items", 20, 110)
-    
-    // Table headers
-    doc.setFontSize(10)
-    doc.text("Description", 20, 120)
-    doc.text("Quantity", 120, 120)
-    doc.text("Price", 150, 120)
-    doc.text("Total", 180, 120)
-    
-    // Table content
-    let y = 130
-    let total = 0
-    
-    data.items.forEach((item, index) => {
-      const itemTotal = item.quantity * item.price
-      total += itemTotal
+    try {
+      const doc = new jsPDF()
       
-      doc.text(item.description, 20, y)
-      doc.text(item.quantity.toString(), 120, y)
-      doc.text(`$${item.price.toFixed(2)}`, 150, y)
-      doc.text(`$${itemTotal.toFixed(2)}`, 180, y)
+      // Add company logo/header
+      doc.setFontSize(20)
+      doc.text("INVOICE", 105, 20, { align: "center" })
       
-      y += 10
-    })
-    
-    // Add total
-    doc.line(20, y, 190, y)
-    y += 10
-    doc.setFontSize(12)
-    doc.text(`Total: $${total.toFixed(2)}`, 150, y)
-    
-    // Add notes
-    if (data.notes) {
-      y += 20
-      doc.setFontSize(12)
-      doc.text("Notes:", 20, y)
-      y += 10
+      // Add invoice details
       doc.setFontSize(10)
-      doc.text(data.notes.split('\n'), 20, y)
+      doc.text(`Invoice Number: ${data.invoiceNumber || ''}`, 20, 40)
+      doc.text(`Date: ${data.date || ''}`, 20, 45)
+      doc.text(`Due Date: ${data.dueDate || ''}`, 20, 50)
+      
+      // Add from details
+      doc.setFontSize(12)
+      doc.text("From:", 20, 65)
+      doc.setFontSize(10)
+      doc.text(data.fromName || '', 20, 70)
+      doc.text(data.fromEmail || '', 20, 75)
+      doc.text((data.fromAddress || '').split('\n'), 20, 80)
+      
+      // Add to details
+      doc.setFontSize(12)
+      doc.text("To:", 120, 65)
+      doc.setFontSize(10)
+      doc.text(data.toName || '', 120, 70)
+      doc.text(data.toEmail || '', 120, 75)
+      doc.text((data.toAddress || '').split('\n'), 120, 80)
+      
+      // Add items table
+      doc.setFontSize(12)
+      doc.text("Items", 20, 110)
+      
+      // Table headers
+      doc.setFontSize(10)
+      doc.text("Description", 20, 120)
+      doc.text("Quantity", 120, 120)
+      doc.text("Price", 150, 120)
+      doc.text("Total", 180, 120)
+      
+      // Table content
+      let y = 130
+      let total = 0
+      
+      if (data.items && Array.isArray(data.items)) {
+        data.items.forEach((item, index) => {
+          const quantity = Number(item.quantity) || 0
+          const price = Number(item.price) || 0
+          const itemTotal = quantity * price
+          total += itemTotal
+          
+          doc.text(item.description || '', 20, y)
+          doc.text(quantity.toString(), 120, y)
+          doc.text(`$${price.toFixed(2)}`, 150, y)
+          doc.text(`$${itemTotal.toFixed(2)}`, 180, y)
+          
+          y += 10
+        })
+      }
+      
+      // Add total
+      doc.line(20, y, 190, y)
+      y += 10
+      doc.setFontSize(12)
+      doc.text(`Total: $${total.toFixed(2)}`, 150, y)
+      
+      // Add notes
+      if (data.notes) {
+        y += 20
+        doc.setFontSize(12)
+        doc.text("Notes:", 20, y)
+        y += 10
+        doc.setFontSize(10)
+        doc.text(data.notes.split('\n'), 20, y)
+      }
+      
+      if (shouldDownload) {
+        // Save the PDF
+        doc.save(`invoice-${data.invoiceNumber}.pdf`)
+      } else {
+        // For preview, return the blob URL
+        const blobUrl = doc.output('bloburl')
+        if (!shouldDownload) {
+          setPreviewUrl(blobUrl)
+        }
+      }
+      
+      return total
+    } catch (err) {
+      console.error("Error generating PDF:", err)
+      return 0
     }
-    
-    if (shouldDownload) {
-      // Save the PDF
-      doc.save(`invoice-${data.invoiceNumber}.pdf`)
-    } else {
-      // Open in new window
-      window.open(doc.output('bloburl'), '_blank')
-    }
-    
-    return total
   }
 
   const previewInvoice = (data: InvoiceFormData) => {
     generatePDF(data, false)
   }
+  
+  // Watch form changes and update preview
+  const formValues = useWatch({
+    control,
+    defaultValue: {
+      invoiceNumber: `INV-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
+      date: new Date().toISOString().split('T')[0],
+      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      fromName: user?.name || '',
+      fromEmail: user?.email || '',
+      items: items
+    }
+  })
+  
+  // Update preview when form values change
+  useEffect(() => {
+    // Debounce the preview generation to avoid too many renders
+    const timer = setTimeout(() => {
+      if (formValues) {
+        generatePDF(formValues as InvoiceFormData, false)
+      }
+    }, 500)
+    
+    return () => clearTimeout(timer)
+  }, [formValues])
 
   const onSubmit = async (data: InvoiceFormData) => {
     setError(null)
@@ -184,7 +225,9 @@ export default function InvoicePage() {
         )}
         
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">Invoice Details</h2>
@@ -297,7 +340,7 @@ export default function InvoicePage() {
             
             {/* Items section and side ad banner */}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              <div className="lg:col-span-3">
+              <div className="lg:col-span-4">
                 {/* Items section */}
                 <div className="space-y-4">
                   <div className="flex flex-wrap justify-between items-center gap-2">
@@ -380,30 +423,41 @@ export default function InvoicePage() {
                 
                 <div className="mt-8 flex gap-4">
                   <Button 
-                    type="button" 
-                    className="flex-1"
-                    variant="outline"
-                    onClick={handleSubmit(previewInvoice)}
-                    disabled={saving}
-                  >
-                    Preview
-                  </Button>
-                  <Button 
                     type="submit" 
                     className="flex-1"
                     disabled={saving}
                   >
-                    {saving ? "Generating..." : "Generate Invoice PDF"}
+                    {saving ? "Generating..." : "Generate & Download PDF"}
                   </Button>
                 </div>
               </div>
               
               {/* Side ad banner */}
-              <div className="lg:col-span-1">
+              {/* <div className="lg:col-span-1">
                 <IndieBoosting id="40SXDKOTS3" direction="vertical" maxProducts={3}/>
-              </div>
+              </div> */}
             </div>
           </form>
+            </div>
+          
+            {/* PDF Preview */}
+            <div className="lg:col-span-1 border rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 min-h-[600px] flex flex-col">
+              <div className="bg-gray-200 dark:bg-gray-600 p-3 font-medium">Real-time Preview</div>
+              <div className="flex-1 p-4 flex items-center justify-center" ref={previewContainerRef}>
+                {previewUrl ? (
+                  <iframe 
+                    src={previewUrl} 
+                    className="w-full h-full border-0" 
+                    title="Invoice Preview"
+                  />
+                ) : (
+                  <div className="text-center text-gray-500 dark:text-gray-400">
+                    <p>Fill out the form to see a real-time preview</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
         
         {/* Bottom ad banner */}
