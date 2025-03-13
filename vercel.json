@@ -1,10 +1,17 @@
 {
   "framework": "nextjs",
-  "buildCommand": "next build",
-  "devCommand": "next dev",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
   "installCommand": "npm install",
   "outputDirectory": ".next",
   "regions": ["sfo1"],
+  "env": {
+    "NEXT_PUBLIC_APPWRITE_ENDPOINT": "@next_public_appwrite_endpoint",
+    "NEXT_PUBLIC_APPWRITE_PROJECT_ID": "@next_public_appwrite_project_id",
+    "NEXT_PUBLIC_APPWRITE_DATABASE_ID": "@next_public_appwrite_database_id",
+    "NEXT_PUBLIC_APPWRITE_INVOICES_COLLECTION_ID": "@next_public_appwrite_invoices_collection_id",
+    "NEXT_PUBLIC_ADSENSE_ID": "@next_public_adsense_id"
+  },
   "headers": [
     {
       "source": "/(.*)",
