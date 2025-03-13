@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next'
+import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import '@indieboosting/react/indieboosting.css'
@@ -31,14 +31,11 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/manifest.json',
+  themeColor: '#4f46e5',
   appleWebApp: {
     title: 'Invoice Generator',
     statusBarStyle: 'black-translucent',
   },
-}
-
-export const viewport: Viewport = {
-  themeColor: '#4f46e5',
 }
 
 export default function RootLayout({
