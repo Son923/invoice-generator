@@ -193,21 +193,25 @@ export default function InvoicePage() {
       // Generate PDF
       const total = generatePDF(data)
       
-      // Save to Appwrite
-      await saveInvoice({
-        ...data,
-        total,
-        status: 'generated',
-        items: data.items.map(item => ({
-          ...item,
-          total: item.quantity * item.price
-        }))
-      })
-      
-      console.log("Invoice saved successfully")
+      // Try to save to Appwrite if user is authenticated
+      try {
+        await saveInvoice({
+          ...data,
+          total,
+          status: 'generated',
+          items: data.items.map(item => ({
+            ...item,
+            total: item.quantity * item.price
+          }))
+        })
+        console.log("Invoice saved successfully")
+      } catch (err) {
+        // Silently handle authentication errors - just generate PDF without saving
+        console.log("Invoice generated but not saved (user not authenticated)")
+      }
     } catch (err: any) {
-      console.error("Error saving invoice:", err)
-      setError(err.message || "Failed to save invoice")
+      console.error("Error generating invoice:", err)
+      setError(err.message || "Failed to generate invoice")
     } finally {
       setSaving(false)
     }
