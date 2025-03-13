@@ -43,6 +43,29 @@ const nextConfig = {
       },
     ];
   },
+
+  // Add webpack configuration to optimize build
+  webpack: (config, { isServer }) => {
+    // Optimize build by excluding large dependencies from server bundle
+    if (isServer) {
+      config.externals = [...config.externals, 'jspdf'];
+    }
+
+    // Increase memory limit for webpack
+    config.performance = {
+      ...config.performance,
+      maxEntrypointSize: 512000,
+      maxAssetSize: 512000,
+    };
+
+    return config;
+  },
+
+  // Optimize build output
+  experimental: {
+    optimizeCss: true,
+    scrollRestoration: true,
+  },
 }
 
 module.exports = nextConfig 
